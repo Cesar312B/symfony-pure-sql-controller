@@ -1,0 +1,228 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log de Usuarios!{% endblock %}
+
+{% block body %}
+
+<br>
+  <table id="example" class="table table-striped" style="width:100%">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Producto</th>
+            <th>Categoria</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in resultados %}
+            <tr>
+                <td>{{ row.idProductos }}</td>
+                <td>{{ row.nombre }}</td>
+                <td>{{ row.categoria }}</td>
+                <td>{{ row.cantidad }}</td>
+                <td>{{ row.precio }}</td>
+                <td>{{row.sub_total}}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+
+
+<script>
+
+ $(document).ready(function (){
+var table = $('#example').DataTable({
+   "language": {
+        "sProcessing":     "Procesando...",
+    "sLengthMenu":     "Mostrar _MENU_ registros",
+    "sZeroRecords":    "No se encontraron resultados",
+    "sEmptyTable":     "Ningún dato disponible en esta tabla",
+    "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+    "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+    "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+    "sSearch":         "Buscar:",
+    "sInfoThousands":  ",",
+    "sLoadingRecords": "Cargando...",
+    "oPaginate": {
+        "sFirst":    "Primero",
+        "sLast":     "Último",
+        "sNext":     "Siguiente",
+        "sPrevious": "Anterior"
+    },
+    "oAria": {
+        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+    },
+    "buttons": {
+        "copy": "Copiar",
+        "colvis": "Visibilidad"
+    },
+
+    searchPanes: {
+                clearMessage: 'Limpiar Panel',
+                title: {
+                     _: 'Filters Selected - %d',
+                    0: 'Ningun Filtro Seleccionado',
+                    1: 'Filtros seleccionado ', 
+                   
+                },
+            },
+            
+              buttons: {
+                copyTitle: 'Agregado al portapapeles',
+                copyKeys: 'Seguir adelante <i>ctrl</i> ou <i>\u2318</i> + <i>C</i> para copiar los datos de la tabla a su portapapeles. <br><br>Para cancelar, haga clic en este mensaje o presione Esc.',
+                copySuccess: {
+                    _: '%d datos copiados',
+                    1: '1 ligne copiée'
+                }
+            }
+
+     },
+    'responsive': true,   
+    dom: 'Plfrtip',
+
+      searchPanes: {
+            initCollapsed: true
+        },
+      columnDefs: [
+            {
+                searchPanes: {
+                    show: false
+                },
+                targets: [0]
+            },
+               {
+                searchPanes: {
+                    show: true
+                },
+                targets: [1]
+            },
+            {
+                searchPanes: {
+                    show: true
+                },
+                targets: [2]
+            },
+            {
+                searchPanes: {
+                    show: false
+                },
+                targets: [3]
+            },
+             {
+                searchPanes: {
+                    show: false
+                },
+                targets: [4]
+            },
+             {
+                searchPanes: {
+                    show: false
+                },
+                targets: [5]
+            }
+        ]
+    });
+
+
+
+ var container = $('<div id="container" class="d-flex  shadow-sm" ></div> </br>').insertBefore(table.table().container());
+ 
+    var chart = Highcharts.chart(container[0], {
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie',
+
+             events: {
+        load: function(event) {
+            var total = 0; // get total of data
+            for (var i = 0, len = this.series[0].yData.length; i < len; i++) {
+                total += this.series[0].yData[i];
+            }
+            var text = this.renderer.text(
+                'Total: ' + total,
+                this.plotLeft,
+                this.plotTop - 20
+            ).attr({
+                zIndex: 5
+            }).add() // write it to the upper left hand corner
+        }
+    }
+        },
+        title: {
+            text: 'Compras Totales',
+        },
+           accessibility: {
+             point: {
+             valueSuffix: '%'
+         }
+         },
+
+          plotOptions: {
+             pie: {
+             allowPointSelect: true,
+             cursor: 'pointer',
+               dataLabels: {
+        enabled: true,
+        format: '{point.name}</b>: {point.percentage:.1f} % </b>',
+         connectorColor: 'silver',
+         distance: +10,
+      }
+    }
+  },
+
+ 
+        series: [
+            {    name: "Nº Compras",
+                 data: chartData(table),
+            },
+        ],
+    });
+
+
+     table.on('draw', function () {
+        chart.series[0].setData(chartData(table));
+    });
+
+    
+
+});
+
+
+function chartData(table) {
+    var sums = {};
+ 
+    // Sum the values in each position
+    table
+        .rows({ search: 'applied' })
+        .data()
+        .each(function (row) {
+            var key = row[1];
+            var val = parseFloat(row[3]);
+            if (sums[key]) {
+                sums[key] += val; // Si ya existe el valor, se suma al total
+            } else {
+                sums[key] = val; // Si no existe, se crea una nueva entrada
+            }
+        });
+ 
+    // And map it to the format highcharts uses
+    return $.map(sums, function (sum, key) {
+        return {
+            name: key,
+            y: sum,
+        };
+    });
+}
+
+</script>
+{% endblock %}

@@ -1,19 +1,61 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
         {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
         {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
+        <link href="{{ asset('boostrap/bootstrap.min.css') }}" rel="stylesheet">
+        <link href="{{ asset('datatables/datatables.min.css') }}" rel="stylesheet"/>
+        <link rel="{{ asset('boostrap/bootstrap-icons.css') }}">
+        <link rel="stylesheet" href="{{ asset('icons/css/all.css')}}">
+            {#{{ encore_entry_link_tags('app') }}#}
         {% endblock %}
 
         {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
+        <script src="{{ asset('jquery/jquery-3.6.4.js') }}"></script>
+        <script src="{{ asset('jquery/jquery.min.js') }}"></script>
+        <script src="{{ asset('boostrap/bootstrap.bundle.min.js') }}"></script>
+        <script src="{{ asset('datatables/datatables.min.js') }}"></script>
+        <script src="{{ asset('datatables/pdfmake.min.js') }}"></script>
+        <script src="{{ asset('datatables/vfs_fonts.js') }}"></script>
+        <script src="{{ asset('chars/highcharts.js') }}"></script>
+        <script src="{{ asset('chars/data.js') }}" ></script>
+        <script src="{{ asset('chars/exporting.js') }}" ></script>
+        <script src="{{ asset('chars/accessibility.js') }}" ></script>
+           {#{{ encore_entry_script_tags('app') }}#} 
         {% endblock %}
     </head>
+ 
+
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Mercado Popular</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div>
+    <ul class="list-group list-group-flush">
+     <li class="list-group-item"><a href="{{ path('app_usarios') }}">Usuarios</a></li>
+     <li class="list-group-item"><a href="{{ path('app_provedores') }}">Provedores</a></li>
+     <li class="list-group-item"><a href="{{ path('app_productos') }}">Productos</a></li>
+     <li class="list-group-item"><a href="{{ path('app_clientes') }}">Clientes</a></li>
+    </ul>
+    </div>
+
+  </div>
+</div>
     <body>
-        {% block body %}{% endblock %}
+       <div class="page-content p-4 ">
+           <a class="btn btn-primary" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+             <i class="fa-solid fa-bars"></i>
+           </a>
+
+        {% block body %}
+        
+        {% endblock %}
+     </div>
     </body>
 </html>

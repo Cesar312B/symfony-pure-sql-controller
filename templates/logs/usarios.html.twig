@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Usuarios!{% endblock %}
+
+{% block body %}
+
+
+<div class="row">
+
+    <div class="col">
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">Numero de inicios de sesión</h5>
+                <h6 class="card-subtitle mb-2 text-body-secondary">{{ resultado1.total_logs }}</h6>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">Total Facturas</h5>
+                <h6 class="card-subtitle mb-2 text-body-secondary">{{ resultado2.total_facturas }}</h6>
+                <a href="{{ path('app_full_facturas') }}" class="card-link">Todas las Ventas</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">Total Compras</h5>
+                <h6 class="card-subtitle mb-2 text-body-secondary">{{ resultado3.total_compras }}</h6>
+                <a href="{{ path('app_fullcompras') }}" class="card-link">Todas las Compras</a>
+            </div>
+        </div>
+    </div>
+</div>
+<h2>Usuarios</h2>
+<br>
+  <table id="example" class="table table-striped" style="width:100%">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Username</th>
+            <th>Correo</th>
+            <th>Activity Logs</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in resultados %}
+            <tr>
+                <td>{{ row.idusuario }}</td>
+                <td>{{ row.nombre }}</td>
+                <td>{{ row.user }}</td>
+                <td>{{ row.correo }}</td>
+                <td>
+                <a href="{{ path('app_logs', {'idusuario': row.idusuario}) }}" title="Inicios de Sesión "><i class="fa-solid fa-clipboard-user"></i></a>
+                <a href="{{ path('app_compras', {'idusuario': row.idusuario}) }}" title="Compras"><i class="fa-solid fa-cart-shopping"></i></a>
+                <a href="{{ path('app_facturas', {'idusuario': row.idusuario}) }}" title="Facturas"><i class="fa-sharp fa-solid fa-file-invoice"></i></a>
+                </td>
+                 
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script>
+$(document).ready(function () {
+    $('#example').DataTable({
+          responsive: true,
+        
+    
+
+    });
+});
+</script>
+{% endblock %}

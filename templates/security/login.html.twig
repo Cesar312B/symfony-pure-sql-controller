@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Login!{% endblock %}
+
+{% block body %}
+{{ parent() }}
+
+{% if error %}
+    <div>{{ error }}</div>
+{% endif %}
+
+  <form method="POST" action="{{ path('app_login') }}">
+        <div class="form-group">
+            <label for="username">Nombre de Usuario</label>
+            <input type="text" id="username" name="_username" value="{{ username }}" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" name="_password" class="form-control" required>
+        </div>
+        <br>
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+<br>
+ <li class="list-group-item"><a href="{{ path('app_nuevo_usuario') }}">Nuevo usario</a></li>
+
+{% endblock %}

@@ -1,0 +1,128 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Facturas!{% endblock %}
+
+{% block body %}
+
+<h2>Facturas</h2>
+<br>
+  <table id="example" class="table table-striped" style="width:100%">
+    <thead>
+        <tr>
+            <th>Id_factura</th>
+            <th>Fecha de Emision</th>
+            <th>Cliente</th>
+            <th>Usuario</th>
+            <th>Negocio</th>
+            <th>RUC</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in resultados %}
+            <tr>
+                <td>{{ row.idFactura }}</td>
+                <td>{{ row.fecha_emision }}</td>
+                <td>{{ row.Clinete }}</td>
+                <td>{{row.Usuario}}</td>
+                <td>{{row.nombre}}</td>
+                <td>{{row.ruc}}</td>
+                <td>
+                <!-- Enlace o botón para abrir la ventana modal -->
+                  <a href="#" class="ver-detalles" data-id="{{ row.idFactura }}" data-toggle="modal" data-target="#detalleModal">
+                   Ver Detalles
+                 </a>
+               </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<div class="modal fade" id="detalleModal" tabindex="-1" role="dialog" aria-labelledby="detalleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detalleModalLabel">Detalles de la Factura</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                   <table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Costo</th>
+            <th>Talla</th>
+            <th>Categoría</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Subtotal</th>
+        </tr>
+    </thead>
+    <tbody id="detalleFactura"></tbody>
+    <tfoot>
+        <tr>
+            <td colspan="6" style="text-align: right;"><strong>Total:</strong></td>
+            <td id="totalSubtotal"></td>
+        </tr>
+    </tfoot>
+</table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script>
+  $(document).ready(function () {
+        $('#example').DataTable({
+            responsive: true,
+        });
+
+      $('a[data-toggle="modal"]').on('click', function () {
+        var idFactura = $(this).data('id');
+
+        // Realizar la petición AJAX para obtener los detalles de la factura
+        $.ajax({
+            url: '{{ path('app_detalle_factura', {'id': '__idFactura__'}) }}'.replace('__idFactura__', idFactura),
+            type: 'GET',
+            success: function (response) {
+                // Construir el contenido HTML de los detalles de la factura
+                var detallesHtml = '';
+                var totalSubtotal = 0; // Variable para almacenar la suma de los subtotales
+                for (var i = 0; i < response.length; i++) {
+                    var detalle = response[i];
+                    detallesHtml += '<tr>';
+                    detallesHtml += '<td>' + detalle.nombre + '</td>';
+                    detallesHtml += '<td>' + detalle.costo + '</td>';
+                    detallesHtml += '<td>' + detalle.talla + '</td>';
+                    detallesHtml += '<td>' + detalle.categoria + '</td>';
+                    detallesHtml += '<td>' + detalle.cantidad + '</td>';
+                    detallesHtml += '<td>' + detalle.precio + '</td>';
+                    detallesHtml += '<td>' + detalle.sub_total + '</td>';
+                    detallesHtml += '</tr>';
+
+                    // Sumar el valor de cada sub_total
+                    totalSubtotal += parseFloat(detalle.sub_total);
+                }
+
+                // Mostrar los detalles de la factura en la ventana modal
+                $('#detalleFactura').html(detallesHtml);
+                $('#totalSubtotal').text(totalSubtotal.toFixed(2)); // Mostrar la suma de los subtotales
+                $('#detalleModal').modal('show');
+            },
+            error: function (xhr, status, errorThrown) {
+                console.error('Error: ' + errorThrown);
+            }
+        });
+    });
+
+    });
+</script>
+
+
+{% endblock %}

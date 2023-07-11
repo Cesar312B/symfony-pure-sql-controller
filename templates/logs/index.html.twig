@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log de Usuarios!{% endblock %}
+
+{% block body %}
+
+<h2>Logs de Usuario</h2>
+<br>
+  <table id="example" class="table table-striped" style="width:100%">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Fecha</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in resultados %}
+            <tr>
+                <td>{{ row.idusuario }}</td>
+                <td>{{ row.nombre }}</td>
+                <td>{{ row.fecha }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script>
+$(document).ready(function () {
+    $('#example').DataTable({
+          responsive: true,
+          dom: 'Plfrtip',
+          searchPanes: {
+            initCollapsed: true
+        }
+
+    });
+});
+</script>
+{% endblock %}

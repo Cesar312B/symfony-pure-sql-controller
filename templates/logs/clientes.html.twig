@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Usuarios!{% endblock %}
+
+{% block body %}
+
+<h2>Clientes</h2>
+<br>
+  <table id="example" class="table table-striped" style="width:100%">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Identificacion</th>
+            <th>Direccion</th>
+            <th>Telefono</th>
+            <th>Correo</th>
+            <th>Estado</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in resultados %}
+            <tr>
+                <td>{{ row.idCliente }}</td>
+                <td>{{ row.nombre }}</td>
+                <td>{{ row.identificacion }}</td>
+                <td>{{ row.direccion }}</td> 
+                <td>{{ row.telefono }}</td>
+                <td>{{ row.correo }}</td> 
+                 <td>{{ row.estado ? 'Activo' : 'Inactivo'  }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script>
+$(document).ready(function () {
+    $('#example').DataTable({
+          responsive: true,
+        
+    
+
+    });
+});
+</script>
+{% endblock %}
